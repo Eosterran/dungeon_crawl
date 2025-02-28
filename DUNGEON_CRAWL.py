@@ -54,12 +54,16 @@ class Dungeon:
 
 #Introduction to Game
 print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
-pc_name = input("First, however, we will need to know a bit more about you. What is your name?")
+
+pc_name = input("First, however, we will need to know a bit more about you. What is your name?\n")
+
 print("Excellent. Welcome to Eosterra, {}.".format(pc_name))
+
 while True:
-    pc_class = input("Now, what class are you? Input '1' for Fighter or '2' for Sorcerer.")
+    pc_class = input("Now, what class are you? Input '1' for Fighter or '2' for Sorcerer.\n")
     if pc_class == 1:
         pc_class = "Fighter"
+        print("Very well. {} shall be a fighter. Their stats and inventory have been updated to reflect this.")
         break
     elif pc_class == 2:
         print("I'm sorry, but sorcerers haven't been invented yet. Please choose another class.")
