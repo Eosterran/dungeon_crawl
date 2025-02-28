@@ -51,3 +51,16 @@ class Item:
 class Dungeon:
     def __init__ (self, length = 5):
         self.length = length
+
+#Introduction to Game
+print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
+pc_name = input("First, however, we will need to know a bit more about you. What is your name?")
+print("Excellent. Welcome to Eosterra, {}.".format(pc_name))
+while True:
+    pc_class = input("Now, what class are you? Input '1' for Fighter or '2' for Sorcerer.")
+    if pc_class == 1:
+        pc_class = "Fighter"
+        break
+    elif pc_class == 2:
+        print("I'm sorry, but sorcerers haven't been invented yet. Please choose another class.")
+        continue
