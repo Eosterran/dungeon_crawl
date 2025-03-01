@@ -51,10 +51,6 @@ class Player:
             self.is_alive = False
         print(f"{self.name} has met their early end. Good luck next time.")
 
-#Define the Player Class
-class P_Class:
-    def __init__ (self, name, base_attack, base_defense, items = []):
-
 #Define the Monster class
 class Monster:
     def __init__ (self, name, hp, attack, defense):
@@ -80,6 +76,7 @@ class Item:
 sword = Item("sword", "attack", 2)
 shield = Item("shield", "defend", 1)
 armor = Item("armor", "defend", 2)
+magic_cloak = Item("magic cloak", "buff", 2) #later functionality?
 
 #Introduction to Game and Player Creation
 print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
