@@ -75,6 +75,11 @@ class Item:
         self.name = name
         self.purpose = purpose
         self.modifier = modifier
+        
+#Item Compendium
+sword = Item("sword", "attack", 2)
+shield = Item("shield", "defend", 1)
+armor = Item("armor", "defend", 2)
 
 #Introduction to Game and Player Creation
 print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
