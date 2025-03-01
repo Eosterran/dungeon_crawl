@@ -4,7 +4,7 @@
 #Import the random module
 import random
 
-#Random Needed Functions??
+#Needed Functions
 def roll_dice(num_sides, quantity):
     rolls = []
     total = 0
@@ -12,8 +12,31 @@ def roll_dice(num_sides, quantity):
         rolls.append(random.randint(1, int(num_sides - 1)))
     for roll in rolls:
         total += roll
-    print(f"You rolled {quantity} d{num_sides}. Results: {rolls};{total}")
+    print(f"You rolled {quantity} d{num_sides}. Results: {rolls} Total:{total}")
+
+"""
+Create Room: random Room Description + Random Monster
+  Random Room Description: randomize descriptions, remove from set
+  Random Monster: randomize monsters, choose 1, remove from set, populate loot
+    ***create dungeon_boss after 5 rooms
+  Set number of turns = 0
+PC Choice: Sneak or Engage
+  If Sneak: Run Stealth
+    Stealth: Roll 1d20, Add "Stealth" modifiers, compare against Monster perception (1 d20)
+      If pass, bypass room
+      If fail, engage monster, go 2nd
+  If Engage: Run Engage
+    Engage: Go 1st, Choice-attack or dodge, Monster attack or dodge
+      Attack - run attack, take damage, check monster.is_alive
+        If monster.is_alive = true, next turn
+        If monster.is_alive = false, run monster.lootdrop
+      Dodge - add +2 to pc.defense
+      Monster Choice - random 70/30 attack/dodge (same effects but for monster)
+        Attack - run attack, take damage, check pc.is_alive
+        If pc.is_alive = True, next turn
+        If pc.is_alive = False, run pc.game_over
         
+"""      
     
 #Define Classes
 #Define the Player class
@@ -73,27 +96,23 @@ class Item:
         self.modifier = modifier
         
 #Item Compendium
-sword = Item("sword", "attack", 2)
+basic_sword = Item("basic sword", "attack", 2)
+sword_1 = Item("+1 Sword", "attack", 3)
 shield = Item("shield", "defend", 1)
+shield_2 = Item("+1 shield", "defend", 2)
 armor = Item("armor", "defend", 2)
-magic_cloak = Item("magic cloak", "buff", 2) #later functionality?
+""" magic_cloak = Item("magic cloak", "buff", 2)  """#later functionality?
 
 #Introduction to Game and Player Creation
 print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
 
 pc_name = input("First, however, we will need to know a bit more about you. What is your name?\n")
 
-print(f"Excellent. Welcome to Eosterra, {pc_name}.")
+PC = Player(pc_name, 20, 5, 10, 0, 2)
 
-while True:
-    pc_class = input("Now, what class will you choose? Choose '1' for Fighter or '2' for Sorcerer.\n")
-    if pc_class == "1":
-        pc_class = "Fighter"
-        print(f"Very well. {pc_name} shall be a fighter. Their stats and inventory have been updated to reflect this.")
-        break
-    elif pc_class == "2":
-        print("I'm sorry, but sorcerers haven't been invented yet. Please choose another class.")
-    else:
-        print("I'm sorry, I didn't catch that. Try again.")
+print(f"Excellent. Welcome to Eosterra, {pc_name}. It is time to begin your adventure. You start with a basic sword and the clothes on your back. But in the depths of this dungeon, much more awaits you...")
+
+
+
         
 
