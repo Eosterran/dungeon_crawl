@@ -7,9 +7,9 @@ def roll_dice(num_sides, quantity):
         rolls.append(random.randint(1, int(num_sides - 1)))
     for roll in rolls:
         total += roll
-    print(f"You rolled {quantity} d{num_sides}. Results: {rolls} Total:{total}")
+    return rolls, total
     
-roll_dice (20, 2)
+print(roll_dice (20, 2))
 
 #This is for choosing a class, which isn't functional yet
 """ while True:
