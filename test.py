@@ -1,15 +1,15 @@
-import random
+import time
+import sys
 
-def roll_dice(num_sides, quantity):
-    rolls = []
-    total = 0
-    for die in range(quantity):
-        rolls.append(random.randint(1, int(num_sides - 1)))
-    for roll in rolls:
-        total += roll
-    return rolls, total
-    
-print(roll_dice (20, 2))
+def typed(text, delay=0.05):
+    for character in text:
+        sys.stdout.write(character)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+typed("Hello, Shawn. My name is Jerry.")
+
 
 #This is for choosing a class, which isn't functional yet
 """ while True:
