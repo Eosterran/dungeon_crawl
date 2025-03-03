@@ -59,7 +59,7 @@ class Player:
         self.defense_value = defense
         self.defense_modifier = 0
         self.gold = 0
-        self.potions = 0
+        self.potions = 2
         self.items = []
         self.is_alive = True
         
@@ -127,6 +127,27 @@ class Player:
                 typed("\nI'm sorry, I didn't catch that. Try again.")
         
     def drink_potion(self):
+        while True:
+            if self.potions == 0:
+                typed("You reach into your bag...and find nothing but empty bottles.\n")
+                return
+            else:
+                potion_status = input(typed(f"You have {self.potions} potions. Drink one?\n"))
+            if lower(potion_status) == "yes":
+                self.potions -= 1
+                self.current_hp += roll_dice(8, 2)
+                if self.current_hp > self.max_hp:
+                    self.current_hp = self.max_hp
+                else:
+                    pass
+            elif lower(potion_status) == "no":
+                return
+            else:
+                typed("I'm sorry, I didn't catch that.")
+                
+            
+            
+        
         
         
     
@@ -229,7 +250,6 @@ sword_1 = Item("+1 Sword", "attack", 3)
 shield = Item("shield", "defend", 1)
 shield_2 = Item("+1 shield", "defend", 2)
 armor = Item("armor", "defend", 2)
-potion = Item("potion", "heal", roll_dice(10, 1))
 """ magic_cloak = Item("magic cloak", "buff", 2)  """#later functionality?
 
 items_list = [sword_1, shield, shield_2, armor]
