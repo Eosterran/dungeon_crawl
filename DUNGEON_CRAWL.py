@@ -12,8 +12,7 @@ def typed(text, delay=0.05):
         sys.stdout.write(character)
         sys.stdout.flush()
         time.sleep(delay)
-    print()
-    
+    print() 
 def roll_dice(num_sides, quantity):
     rolls = []
     total = 0
@@ -23,29 +22,6 @@ def roll_dice(num_sides, quantity):
         total += roll
     return total
 
-"""# Game Flow Guide
-Create Room: random Room Description + Random Monster
-  Random Room Description: randomize descriptions, remove from set
-  Random Monster: randomize monsters, choose 1, remove from set, populate loot
-    ***create dungeon_boss after 5 rooms
-  Set number of turns = 0
-PC Choice: Sneak or Engage
-  If Sneak: Run Stealth
-    Stealth: Roll 1d20, Add "Stealth" modifiers, compare against Monster perception (1 d20)
-      If pass, bypass room
-      If fail, engage monster, go 2nd
-  If Engage: Run Engage
-    Engage: Go 1st, Choice-attack or dodge, Monster attack or dodge
-      Attack - run attack, take damage, check monster.is_alive
-        If monster.is_alive = true, next turn
-        If monster.is_alive = false, run monster.lootdrop
-      Dodge - add +2 to pc.defense
-      Monster Choice - random 70/30 attack/dodge (same effects but for monster)
-        Attack - run attack, take damage, check pc.is_alive
-        If pc.is_alive = True, next turn
-        If pc.is_alive = False, run pc.game_over
-        
-"""      
 
 #Define the Player class
 class Player:
@@ -53,14 +29,14 @@ class Player:
         self.name = name
         self.max_hp = hp
         self.current_hp = hp
-        self.attack_modifier = 1
+        self.attack_modifier = 3
         self.hit_die = 8
         self.damage_dice = 1
         self.defense_value = defense
         self.defense_modifier = 0
         self.gold = 0
-        self.potions = 2
-        self.items = []
+        self.potions = 1
+        self.items = [basic_sword]
         self.is_alive = True
         
     def __repr__ (self):
@@ -79,8 +55,12 @@ class Player:
     def receive_loot(self, opponent):
         typed(f"You loot the body.\n")
         self.gold += opponent.gold
+        self.potions += opponent.potions
+        if self.potions > 2:
+            self.potions = 2
+            typed("You already have 2 potions. You can't carry any more.\n")
         self.items.append(opponent.items)
-        typed(f"You now have {self.gold} gold and your pack contains {self.items}\n") 
+        typed(f"You now have {self.gold} gold, {self.potions} potions, and your pack contains {self.items}\n") 
             
     def dodge(self):
         pass
@@ -129,27 +109,21 @@ class Player:
     def drink_potion(self):
         while True:
             if self.potions == 0:
-                typed("You reach into your bag...and find nothing but empty bottles.\n")
+                typed("You reach into your pack...and find nothing but empty bottles.\n")
                 return
             else:
                 potion_status = input(typed(f"You have {self.potions} potions. Drink one?\n"))
-            if lower(potion_status) == "yes":
+            if potion_status.lower == "yes":
                 self.potions -= 1
                 self.current_hp += roll_dice(8, 2)
                 if self.current_hp > self.max_hp:
                     self.current_hp = self.max_hp
                 else:
                     pass
-            elif lower(potion_status) == "no":
+            elif potion_status.lower == "no":
                 return
             else:
                 typed("I'm sorry, I didn't catch that.")
-                
-            
-            
-        
-        
-        
     
     def take_dmg(self, dmg):
         self.current_hp -= dmg
@@ -165,7 +139,6 @@ class Player:
             self.is_alive = False
         typed(f"The world fades from view as you breathe your final breath. {self.name}'s fate is sealed. Good luck in the next life.")
 
-
 #Defines the "Item" class:
 class Item:
     def __init__ (self, name, purpose, modifier):
@@ -177,8 +150,7 @@ class Item:
     def __repr__(self):
         return self.name
     
-    
-#Define the Monster class
+#Define the "Monster" class:
 class Monster:
     def __init__ (self, name, hp, attack_modifier, hit_die, dmg_dice, defense):
         self.name = name
@@ -189,6 +161,7 @@ class Monster:
         self.dmg_dice = dmg_dice
         self.defense = defense
         self.gold = 0
+        self.potions = 0
         self.items = []
         self.is_alive = True
     
@@ -268,7 +241,7 @@ input("Press 'Enter' to enter the dungeon.\n")
 room_count = 8
 dungeon_monsters = monster_list
 dungeon_items = items_list
-boss_status = False
+"""boss_status = False"""
 
 #Determines Boss Status - STILL IN DEV. **No boss_battle function written**
 """while True:
@@ -291,17 +264,31 @@ while True:
     current_monster = random.choice(monster_list)
     dungeon_monsters.remove(current_monster)
     current_monster.gold += random.randint(0, 5)
+    potion_roll = roll_dice(10, 1)
+    if potion_roll in range(6, 9):
+        current_monster.potions += 1
     item_roll = roll_dice(10, 1)
-    if item_roll == 9 or 10:
+    if item_roll in range(9, 11):
         item_loot = random.choice(dungeon_items)
         current_monster.items.append(item_loot)
         dungeon_items.remove(item_loot)
-    else:
-        pass
+    
     if room_count == 8:
-        typed("You enter the first room. ")
+        typed("You enter the first room.\n")
     else:
-        typed("You enter the next room. ")
+        while True:
+            choice = input(typed("What would you like to do?\n1) Enter the next room.\n2) Equip items.\n 3) Drink potions.\n"))
+            if choice == "1":
+                break
+            elif choice == "2":
+                PC.equip_item
+                continue
+            elif choice == "3":
+                PC.drink_potion
+                continue
+            else:
+                typed("Please choose a valid option.\n")
+        typed("You enter the next room.\n")
     
     #Monster introduced
     typed(f"Before you stands a {current_monster.name}.\n")
