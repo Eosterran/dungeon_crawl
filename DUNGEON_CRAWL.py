@@ -84,6 +84,51 @@ class Player:
             
     def dodge(self):
         pass
+   
+    def equip_item(self):
+        if not self.items:
+            typed("\nYour pack is empty. You cannot equip any items.\n")
+            return
+        else:
+            pass
+        typed("\nYour inventory:\n")    
+        for item in self.items():
+            print(item.name)
+        while True:
+            equip = input(typed("What would you like to equip?\n"))
+            if equip in self.items:
+                if equip.is_equipped == True:
+                    typed("This item is already equipped!\n")
+                else:
+                    pass
+                if equip.purpose == "attack":
+                    PC.attack_modifier += equip.modifier
+                    equip.is_equipped = True
+                    typed(f"{equip.name} has been equipped.")
+                    break
+                elif equip.purpose == "defend":
+                    PC.defense_modifier += equip.modifier
+                    equip.is_equipped = True
+                    typed(f"{equip.name} has been equipped.")
+                    break
+                else:
+                    typed("This item cannot be equipped.\n")
+                    pass
+                    break
+            else:
+                typed("I'm sorry, I didn't catch that. Try again.")
+        while True:
+            choice = input(typed("\nWould you like to equip anything else?"))
+            if choice.lower == "yes":
+                PC.equip_item()
+            elif choice.lower == "no":
+                return
+            else:
+                typed("\nI'm sorry, I didn't catch that. Try again.")
+        
+    def drink_potion(self):
+        
+        
     
     def take_dmg(self, dmg):
         self.current_hp -= dmg
@@ -92,13 +137,26 @@ class Player:
             self.is_alive = False
             self.knock_out()
         else:
-            typed(f"You take {dmg} damage.\n You have {self.current_hp}/{self.max_hp} remaining.")
+            typed(f"You take {dmg} damage.\nYou have {self.current_hp}/{self.max_hp} remaining.")
     
     def knock_out(self):
         if self.is_alive == True:
             self.is_alive = False
         typed(f"The world fades from view as you breathe your final breath. {self.name}'s fate is sealed. Good luck in the next life.")
 
+
+#Defines the "Item" class:
+class Item:
+    def __init__ (self, name, purpose, modifier):
+        self.name = name
+        self.purpose = purpose
+        self.modifier = modifier
+        self.equipped = False
+    
+    def __repr__(self):
+        return self.name
+    
+    
 #Define the Monster class
 class Monster:
     def __init__ (self, name, hp, attack_modifier, hit_die, dmg_dice, defense):
@@ -142,7 +200,7 @@ class Monster:
         typed(f"The {self.name} is dead!\n")
         
 
-#Monster Stats for Monster Creation
+#Monster Compendium: Use these to create "Monster" class objects.
 goblin = Monster("goblin", 10, 0, 4, 1, 0)
 skeleton = Monster("skeleton", 10, 0, 6, 1, 1)
 zombie = Monster("zombie", 8, 1, 6, 2, 0)
@@ -164,23 +222,14 @@ gnoll = Monster("gnoll", 11, 2, 6, 1, 3)
 stirge = Monster("stirge", 8, 0, 8, 1, 1)
 
 monster_list = [goblin, skeleton, zombie, orc, giant_rat, kobold, gelatinous_cube, giant_spider, owlbear, bugbear, ghoul, troll, displacer_beast, bulette, carrion_crawler, basilisk, harpy, gnoll, stirge]
-
-#Define the Item class
-class Item:
-    def __init__ (self, name, purpose, modifier):
-        self.name = name
-        self.purpose = purpose
-        self.modifier = modifier
-    
-    def __repr__(self):
-        return self.name
         
-#Item Compendium
+#Item Compendium: Use these to create "Item" class objects.
 basic_sword = Item("basic sword", "attack", 2)
 sword_1 = Item("+1 Sword", "attack", 3)
 shield = Item("shield", "defend", 1)
 shield_2 = Item("+1 shield", "defend", 2)
 armor = Item("armor", "defend", 2)
+potion = Item("potion", "heal", roll_dice(10, 1))
 """ magic_cloak = Item("magic cloak", "buff", 2)  """#later functionality?
 
 items_list = [sword_1, shield, shield_2, armor]
@@ -254,7 +303,8 @@ while True:
                     else:
                         pass
                     current_monster.attack(PC)
-                    input("Press any key to continue.\n")
+                    input("\nPress any key to continue.\n")
+                    typed("You prepare to attack again.\n")
                     if PC.is_alive == False:
                         PC.knock_out()
                         break
