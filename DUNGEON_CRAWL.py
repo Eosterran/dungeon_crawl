@@ -1,18 +1,21 @@
 #This is Dungeon Crawl, a text-based adventure game.
 #The player will navigate through a dungeon, fighting monsters and collecting treasure.
 
-#Import the random module
+
+#Imports modules
 import random
 import time
 import sys
 
-#Needed Functions
+
+#Defines functions
 def typed(text, delay=0.05):
     for character in text:
         sys.stdout.write(character)
         sys.stdout.flush()
         time.sleep(delay)
     print() 
+
 def roll_dice(num_sides, quantity):
     rolls = []
     total = 0
@@ -31,7 +34,7 @@ class Player:
         self.current_hp = hp
         self.attack_modifier = 3
         self.hit_die = 8
-        self.damage_dice = 1
+        self.damage_dice = 2
         self.defense_value = defense
         self.defense_modifier = 0
         self.gold = 0
@@ -59,7 +62,8 @@ class Player:
         if self.potions > 2:
             self.potions = 2
             typed("You already have 2 potions. You can't carry any more.\n")
-        self.items.append(opponent.items)
+        for item in opponent.items:
+            self.items.append(item)
         typed(f"You now have {self.gold} gold, {self.potions} potions, and your pack contains {self.items}\n") 
             
     def dodge(self):
@@ -72,11 +76,13 @@ class Player:
         else:
             pass
         typed("\nYour inventory:\n")    
-        for item in self.items():
+        for item in self.items:
             print(item.name)
         while True:
-            equip = input(typed("What would you like to equip?\n"))
-            if equip in self.items:
+            typed("What would you like to equip?\n")
+            equip = input()
+            if equip.lower() in self.items:
+                equip = equip.lower()
                 if equip.is_equipped == True:
                     typed("This item is already equipped!\n")
                 else:
@@ -96,15 +102,16 @@ class Player:
                     pass
                     break
             else:
-                typed("I'm sorry, I didn't catch that. Try again.")
+                typed("Please enter a valid response.")
         while True:
-            choice = input(typed("\nWould you like to equip anything else?"))
+            typed("\nWould you like to equip anything else?")
+            choice = input()
             if choice.lower == "yes":
                 PC.equip_item()
             elif choice.lower == "no":
                 return
             else:
-                typed("\nI'm sorry, I didn't catch that. Try again.")
+                typed("Please enter a valid response.\n")
         
     def drink_potion(self):
         while True:
@@ -112,15 +119,17 @@ class Player:
                 typed("You reach into your pack...and find nothing but empty bottles.\n")
                 return
             else:
-                potion_status = input(typed(f"You have {self.potions} potions. Drink one?\n"))
-            if potion_status.lower == "yes":
+                typed(f"You have {self.potions} potions. Drink one?\n")
+                potion_action = input()
+            if potion_action.lower() == "yes":
+                healing = roll_dice(8,2)
+                self.current_hp += healing
                 self.potions -= 1
-                self.current_hp += roll_dice(8, 2)
                 if self.current_hp > self.max_hp:
                     self.current_hp = self.max_hp
-                else:
-                    pass
-            elif potion_status.lower == "no":
+                typed(f"You regain {healing} health. Your hp is now {self.current_hp}/{self.max_hp}.")
+                break
+            elif potion_action.lower() == "no":
                 return
             else:
                 typed("I'm sorry, I didn't catch that.")
@@ -228,13 +237,18 @@ armor = Item("armor", "defend", 2)
 items_list = [sword_1, shield, shield_2, armor]
 
 #Introduction to Game and Player Creation
-typed("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
-
-pc_name = input(typed("First, however, we will need to know a bit more about you. What is your name?\n"))
+typed("INTRO TEXT")
+"""typed("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
+"""
+typed("NAME REQ")
+"""typed("First, however, we will need to know a bit more about you. What is your name?")"""
+pc_name = input()
 
 PC = Player(pc_name)
 
-typed(f"Excellent. Welcome to Eosterra, {pc_name}. It is time to begin your adventure. You start with a basic sword and the clothes on your back. But in the depths of this dungeon, much more awaits you...")
+typed(f"Excellent. Welcome to Eosterra, {pc_name}.\n")
+"""typed("It is time to begin your adventure. You start with a basic sword and the clothes on your back. But in the depths of this dungeon, much more awaits you...")
+"""
 input("Press 'Enter' to enter the dungeon.\n")
 
 #Initiates Dungeon
@@ -265,7 +279,7 @@ while True:
     dungeon_monsters.remove(current_monster)
     current_monster.gold += random.randint(0, 5)
     potion_roll = roll_dice(10, 1)
-    if potion_roll in range(6, 9):
+    if potion_roll in range(7, 11):
         current_monster.potions += 1
     item_roll = roll_dice(10, 1)
     if item_roll in range(9, 11):
@@ -277,15 +291,14 @@ while True:
         typed("You enter the first room.\n")
     else:
         while True:
-            choice = input(typed("What would you like to do?\n1) Enter the next room.\n2) Equip items.\n 3) Drink potions.\n"))
+            typed("What would you like to do?\n1) Enter the next room.\n2) Equip items.\n3) Drink potions.\n")
+            choice = input()
             if choice == "1":
                 break
             elif choice == "2":
-                PC.equip_item
-                continue
+                PC.equip_item()
             elif choice == "3":
-                PC.drink_potion
-                continue
+                PC.drink_potion()
             else:
                 typed("Please choose a valid option.\n")
         typed("You enter the next room.\n")
