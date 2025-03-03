@@ -3,8 +3,17 @@
 
 #Import the random module
 import random
+import time
+import sys
 
 #Needed Functions
+def typed(text, delay=0.05):
+    for character in text:
+        sys.stdout.write(character)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+    
 def roll_dice(num_sides, quantity):
     rolls = []
     total = 0
@@ -60,18 +69,18 @@ class Player:
     def attack(self, opponent):
         attack_roll = roll_dice(20, 1) + self.attack_modifier
         if attack_roll >= opponent.defense:
-            print("\nHit!")
+            typed("\nHit!")
             total_dmg = roll_dice(self.hit_die, self.damage_dice) + self.attack_modifier
-            print(f"You inflict {total_dmg} points of damage.\n")
+            typed(f"You inflict {total_dmg} points of damage.\n")
             opponent.take_dmg(total_dmg)   
         else:
-            print("\nMiss!\n")
+            typed("\nMiss!\n")
     
     def receive_loot(self, opponent):
-        print(f"You loot the body.\n")
+        typed(f"You loot the body.\n")
         self.gold += opponent.gold
         self.items.append(opponent.items)
-        print(f"You now have {self.gold} gold and your pack contains {self.items}\n") 
+        typed(f"You now have {self.gold} gold and your pack contains {self.items}\n") 
             
     def dodge(self):
         pass
@@ -83,12 +92,12 @@ class Player:
             self.is_alive = False
             self.knock_out()
         else:
-            print(f"You take {dmg} damage.\n You have {self.current_hp}/{self.max_hp} remaining.")
+            typed(f"You take {dmg} damage.\n You have {self.current_hp}/{self.max_hp} remaining.")
     
     def knock_out(self):
         if self.is_alive == True:
             self.is_alive = False
-        print(f"The world fades from view as you breathe your final breath. {self.name}'s fate is sealed. Good luck in the next life.")
+        typed(f"The world fades from view as you breathe your final breath. {self.name}'s fate is sealed. Good luck in the next life.")
 
 #Define the Monster class
 class Monster:
@@ -109,13 +118,13 @@ class Monster:
 
     def attack(self, opponent):
         attack_value = roll_dice(20, 1) + self.attack_modifier
-        print(f"The {self.name} swings...\n")
+        typed(f"The {self.name} swings...\n")
         if attack_value >= opponent.defense_value + opponent.defense_modifier:
-            print(f"The {self.name} lands a hit!\n")
+            typed(f"The {self.name} lands a hit!\n")
             total_dmg = self.attack_modifier + (self.dmg_dice * self.hit_die)
             opponent.take_dmg(total_dmg)
         else: 
-            print(f"The {self.name} misses!")
+            typed(f"The {self.name} misses!")
     
     def take_dmg(self, dmg):
         self.current_hp -= dmg
@@ -130,7 +139,7 @@ class Monster:
         pass""" #TBD
     
     def knock_out(self):
-        print(f"The {self.name} is dead!\n")
+        typed(f"The {self.name} is dead!\n")
         
 
 #Monster Stats for Monster Creation
@@ -177,14 +186,14 @@ armor = Item("armor", "defend", 2)
 items_list = [sword_1, shield, shield_2, armor]
 
 #Introduction to Game and Player Creation
-print("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
+typed("Greetings, and well met! Welcome to DUNGEON CRAWL. Your task? Survive.")
 
-pc_name = input("First, however, we will need to know a bit more about you. What is your name?\n")
+pc_name = input(typed("First, however, we will need to know a bit more about you. What is your name?\n"))
 
 PC = Player(pc_name)
 
-print(f"Excellent. Welcome to Eosterra, {pc_name}. It is time to begin your adventure. You start with a basic sword and the clothes on your back. But in the depths of this dungeon, much more awaits you...")
-input("Press any key to enter the dungeon.\n")
+typed(f"Excellent. Welcome to Eosterra, {pc_name}. It is time to begin your adventure. You start with a basic sword and the clothes on your back. But in the depths of this dungeon, much more awaits you...")
+input("Press 'Enter' to enter the dungeon.\n")
 
 #Initiates Dungeon
 room_count = 8
@@ -221,12 +230,12 @@ while True:
     else:
         pass
     if room_count == 8:
-        print("You enter the first room. ")
+        typed("You enter the first room. ")
     else:
-        print("You enter the next room. ")
+        typed("You enter the next room. ")
     
     #Monster introduced
-    print(f"Before you stands a {current_monster.name}.\n")
+    typed(f"Before you stands a {current_monster.name}.\n")
     
     #Player Chooses to attack or try to stealth past the monster
     while True:
@@ -234,7 +243,7 @@ while True:
             action = input("What would you like to do?\n 1: Attack \n 2: Sneak past\n")
             if action == "1":
                 while True:
-                    print("You attack!")
+                    typed("You attack!")
                     PC.attack(current_monster)
                     input("Press any key to continue.")
                     if current_monster.is_alive == False:
@@ -256,20 +265,20 @@ while True:
                 perception_check = roll_dice(20, 1)
                 if stealth_check >= perception_check: 
                     stealth = True
-                    print(f"\nYou escaped the {current_monster.name}.")
+                    typed(f"\nYou escaped the {current_monster.name}.")
                     room_count -= 1
                     input("Hit any key to continue.\n")
                     break
                 else: 
-                    print (f"You were spotted! The {current_monster.name} attacks!")
+                    typed(f"You were spotted! The {current_monster.name} attacks!")
                     current_monster.attack(PC)       
             else:
-                print("I'm sorry, I didn't catch that.")
+                typed("I'm sorry, I didn't catch that.")
         else:
             break    
 
 #GAME OVER
-print("GAME OVER.")
+typed("\nGAME OVER.")
 
             
        
